@@ -1,48 +1,24 @@
-// API request function
+document.addEventListener('DOMContentLoaded', fetchAndDisplayTokenPrices);
+
 function fetchTokenPrice(url) {
   return fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (data && data.data && data.data.price) {
-        return data.data.price;
-      } else {
-        throw new Error('Invalid response data');
-      }
-    })
+    .then(response => response.json())
+    .then(data => data.price)
     .catch(error => {
-      console.log('Error:', error);
+      console.error('Error fetching token price:', error);
       return 'N/A';
     });
 }
 
-// Display token price
-function displayTokenPrice(symbol, price) {
-  const tokenPriceElement = document.getElementById('tokenPrice');
-  const tokenItem = document.createElement('li');
-  tokenItem.textContent = `Symbol: ${symbol} | Price: ${price}`;
-  tokenPriceElement.appendChild(tokenItem);
+async function fetchAndDisplayTokenPrices() {
+  const symbols = ['LMWR-USDT', 'KCS-USDT'];
+  const tokenPricesElement = document.getElementById('tokenPrices');
+
+  for (const symbol of symbols) {
+    const url = `/api/v1/market/orderbook/level1?symbol=${symbol}`;
+    const price = await fetchTokenPrice(url);
+    const symbolPriceElement = document.createElement('p');
+    symbolPriceElement.innerText = `Symbol: ${symbol} | Price: ${price}`;
+    tokenPricesElement.appendChild(symbolPriceElement);
+  }
 }
-
-// Fetch token prices and display them
-function fetchAndDisplayTokenPrices() {
-  const urls = [
-    '/api/v1/market/orderbook/level1?symbol=LMWR-USDT',
-    '/api/v1/market/orderbook/level1?symbol=KCS-USDT'
-  ];
-
-  urls.forEach(url => {
-    fetchTokenPrice(url)
-      .then(price => {
-        const symbol = url.split('=')[1].toUpperCase();
-        displayTokenPrice(symbol, price);
-      });
-  });
-}
-
-// Fetch and display token prices when the page loads
-window.addEventListener('load', fetchAndDisplayTokenPrices);
