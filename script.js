@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
         symbols.forEach(function(symbol) {
             makeRequest(symbol);
         });
-    }, 5000);
+        displayRefreshMessage();
+    }, 10000);
 
     function makeRequest(symbol) {
         // Make a request to the API endpoint
@@ -50,5 +51,14 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         request.send();
+    }
+
+    function displayRefreshMessage() {
+        var refreshMessageDiv = document.getElementById('refreshMessage');
+        if (refreshMessageDiv) {
+            refreshMessageDiv.textContent = 'Token information refreshed.';
+        } else {
+            console.error('refreshMessage element not found');
+        }
     }
 });
