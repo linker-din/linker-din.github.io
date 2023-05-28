@@ -34,12 +34,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     coinDiv.textContent = symbol + ": " + price;
                     coinDiv.classList.add("coinPrice");
 
-                    // Find existing div for the symbol
-                    var existingCoinDiv = document.querySelector("#coinPrices .coinPrice:nth-child(" + (index + 1) + ")");
+                    // Find existing div for the symbol or create a new one
+                    var existingCoinDiv = document.getElementById('coinPrices_' + index);
                     if (existingCoinDiv) {
                         existingCoinDiv.textContent = symbol + ": " + price;
                     } else {
-                        coinDiv.setAttribute("data-symbol", symbol);
+                        coinDiv.setAttribute("id", "coinPrices_" + index);
                         document.getElementById('coinPrices').appendChild(coinDiv);
                     }
                 } else {
