@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
         symbols.forEach(function(symbol) {
             makeRequest(symbol);
         });
-    }, 10000);
+    }, 5000);
 
     function makeRequest(symbol) {
         // Make a request to the API endpoint
