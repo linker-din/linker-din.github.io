@@ -1,39 +1,54 @@
-document.addEventListener("DOMContentLoaded", async function() {
-  // Define the symbols
-  var symbols = ['LMWR-USDT', 'KCS-USDT'];
+document.addEventListener("DOMContentLoaded", function() {
+    // Define the symbols
+    var symbols = ['LMWR-USDT', 'KCS-USDT'];
 
-  // Make requests for each symbol
-  for (var i = 0; i < symbols.length; i++) {
-    await makeRequest(symbols[i]);
-  }
+    // Make requests initially and every 10 seconds
+    setInterval(function() {
+        symbols.forEach(function(symbol) {
+            makeRequest(symbol);
+        });
+    }, 10000);
 
-  async function makeRequest(symbol) {
-    try {
-      // Make a request to the API endpoint
-      var url = `https://arcane-shelf-63340.herokuapp.com/api/v1/market/orderbook/level1?symbol=${symbol}`;
-      var response = await fetch(url);
+    function makeRequest(symbol) {
+        // Make a request to the API endpoint
+        var request = new XMLHttpRequest();
+        var url = "https://arcane-shelf-63340.herokuapp.com/api/v1/market/orderbook/level1";
+        var params = { "symbol": symbol };
+        var paramString = Object.keys(params).map(function(key) {
+            return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+        }).join("&");
 
-      if (response.ok) {
-        var data = await response.json();
-        var price = data.price;
+        request.open('GET', url + "?" + paramString, true);
 
-        // Create a div element to display the coin price
-        var coinDiv = document.createElement('div');
-        coinDiv.textContent = `${symbol}: ${price}`;
-        coinDiv.classList.add("coinPrice");
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                // Parse the JSON response
+                var response = JSON.parse(request.responseText);
+                var price = response.price;
 
-        // Append the div to the coinPrices element
-        var coinPricesDiv = document.getElementById('coinPrices');
-        if (coinPricesDiv) {
-          coinPricesDiv.appendChild(coinDiv);
-        } else {
-          console.error('coinPrices element not found');
-        }
-      } else {
-        console.error('Error:', response.status);
-      }
-    } catch (error) {
-      console.error('Request failed:', error);
+                // Create a div element to display the coin price
+                var coinDiv = document.createElement('div');
+                coinDiv.textContent = symbol + ": " + price;
+                coinDiv.classList.add("coinPrice");
+
+                // Append the div to the coinPrices element
+                var coinPricesDiv = document.getElementById('coinPrices');
+                if (coinPricesDiv) {
+                    // Clear previous coin prices
+                    coinPricesDiv.innerHTML = '';
+                    coinPricesDiv.appendChild(coinDiv);
+                } else {
+                    console.error('coinPrices element not found');
+                }
+            } else {
+                console.error('Error: ' + request.status);
+            }
+        };
+
+        request.onerror = function() {
+            console.error('Request failed');
+        };
+
+        request.send();
     }
-  }
 });
