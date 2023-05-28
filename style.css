@@ -1,6 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    padding: 20px;
 }
 
 h1 {
@@ -8,13 +7,16 @@ h1 {
 }
 
 #coinPrices {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .coinPrice {
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
-    font-size: 18px;
-    color: #333;
+    font-weight: bold;
+}
+
+#refreshMessage {
+    text-align: center;
+    font-style: italic;
+    color: gray;
 }
