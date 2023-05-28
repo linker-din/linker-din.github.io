@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var paramString = Object.keys(params).map(function(key) {
             return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
         }).join("&");
-        
+
         request.open('GET', url + "?" + paramString, true);
 
         request.onload = function() {
@@ -26,11 +26,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Create a div element to display the coin price
                 var coinDiv = document.createElement('div');
-                coinDiv.innerHTML = symbol + ": " + price;
+                coinDiv.textContent = symbol + ": " + price;
 
                 // Append the div to the coinPrices element
                 var coinPricesDiv = document.getElementById('coinPrices');
-                coinPricesDiv.appendChild(coinDiv);
+                if (coinPricesDiv) {
+                    coinPricesDiv.appendChild(coinDiv);
+                } else {
+                    console.error('coinPrices element not found');
+                }
             } else {
                 console.error('Error: ' + request.status);
             }
