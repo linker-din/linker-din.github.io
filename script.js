@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Make requests initially and every 3 seconds
     setInterval(function() {
-        makeRequest();
+        makeRequests();
         displayRefreshMessage();
     }, 3000);
 
-    function makeRequest() {
+    function makeRequests() {
         // Generate a random number to use as a cache-busting parameter
         var cacheBuster = Math.random();
 
@@ -37,7 +37,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Append the div to the coinPrices element
                     var coinPricesDiv = document.getElementById('coinPrices');
                     if (coinPricesDiv) {
-                        coinPricesDiv.appendChild(coinDiv);
+                        // Find existing div for the symbol
+                        var existingCoinDiv = document.querySelector("#coinPrices .coinPrice[data-symbol='" + symbol + "']");
+                        if (existingCoinDiv) {
+                            existingCoinDiv.textContent = symbol + ": " + price;
+                        } else {
+                            coinDiv.setAttribute("data-symbol", symbol);
+                            coinPricesDiv.appendChild(coinDiv);
+                        }
                     } else {
                         console.error('coinPrices element not found');
                     }
