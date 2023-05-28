@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     setInterval(function() {
         makeRequests();
         displayRefreshMessage();
-    }, 3000);
+    }, 10000);
 
     function makeRequests() {
         // Generate a random number to use as a cache-busting parameter
