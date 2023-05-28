@@ -1,24 +1,18 @@
-document.addEventListener('DOMContentLoaded', fetchAndDisplayTokenPrices);
+const symbols = ['LMWR-USDT', 'KCS-USDT'];
 
-function fetchTokenPrice(url) {
-  return fetch(url)
-    .then(response => response.json())
-    .then(data => data.price)
-    .catch(error => {
-      console.error('Error fetching token price:', error);
-      return 'N/A';
-    });
-}
+symbols.forEach(async (symbol) => {
+  const apiUrl = `https://git.heroku.com/arcane-shelf-63340.git/api/v1/market/orderbook/level1?symbol=${symbol}`;
 
-async function fetchAndDisplayTokenPrices() {
-  const symbols = ['LMWR-USDT', 'KCS-USDT'];
-  const tokenPricesElement = document.getElementById('tokenPrices');
-
-  for (const symbol of symbols) {
-    const url = `/api/v1/market/orderbook/level1?symbol=${symbol}`;
-    const price = await fetchTokenPrice(url);
-    const symbolPriceElement = document.createElement('p');
-    symbolPriceElement.innerText = `Symbol: ${symbol} | Price: ${price}`;
-    tokenPricesElement.appendChild(symbolPriceElement);
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error('Request failed');
+    }
+    const data = await response.json();
+    const price = data.price;
+    console.log(`Symbol: ${symbol}, Price: ${price}`);
+  } catch (error) {
+    console.error(`Error fetching data for symbol ${symbol}: ${error.message}`);
   }
-}
+});
+
