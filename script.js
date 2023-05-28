@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Generate a random number to use as a cache-busting parameter
         var cacheBuster = Math.random();
 
-        symbols.forEach(function(symbol) {
+        symbols.forEach(function(symbol, index) {
             // Make a request to the API endpoint
             var request = new XMLHttpRequest();
             var url = "https://arcane-shelf-63340.herokuapp.com/api/v1/market/orderbook/level1";
@@ -34,19 +34,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     coinDiv.textContent = symbol + ": " + price;
                     coinDiv.classList.add("coinPrice");
 
-                    // Append the div to the coinPrices element
-                    var coinPricesDiv = document.getElementById('coinPrices');
-                    if (coinPricesDiv) {
-                        // Find existing div for the symbol
-                        var existingCoinDiv = document.querySelector("#coinPrices .coinPrice[data-symbol='" + symbol + "']");
-                        if (existingCoinDiv) {
-                            existingCoinDiv.textContent = symbol + ": " + price;
-                        } else {
-                            coinDiv.setAttribute("data-symbol", symbol);
-                            coinPricesDiv.appendChild(coinDiv);
-                        }
+                    // Find existing div for the symbol
+                    var existingCoinDiv = document.querySelector("#coinPrices .coinPrice:nth-child(" + (index + 1) + ")");
+                    if (existingCoinDiv) {
+                        existingCoinDiv.textContent = symbol + ": " + price;
                     } else {
-                        console.error('coinPrices element not found');
+                        coinDiv.setAttribute("data-symbol", symbol);
+                        document.getElementById('coinPrices').appendChild(coinDiv);
                     }
                 } else {
                     console.error('Error: ' + request.status);
