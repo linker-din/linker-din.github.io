@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Define the symbols
     var symbols = ['LMWR-USDT', 'KCS-USDT', 'ETH-USDT', 'BTC-USDT'];
 
+    // Store the coin prices
+    var coinPrices = {};
+
     // Make requests initially and every 3 seconds
     setInterval(function() {
         makeRequests();
@@ -29,19 +32,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     var response = JSON.parse(request.responseText);
                     var price = response.price;
 
-                    // Create a div element to display the coin price
-                    var coinDiv = document.createElement('div');
-                    coinDiv.textContent = symbol + ": " + price;
-                    coinDiv.classList.add("coinPrice");
+                    // Store the price in the coinPrices object
+                    coinPrices[symbol] = price;
 
-                    // Find existing div for the symbol or create a new one
-                    var existingCoinDiv = document.getElementById('coinPrices_' + index);
-                    if (existingCoinDiv) {
-                        existingCoinDiv.textContent = symbol + ": " + price;
-                    } else {
-                        coinDiv.setAttribute("id", "coinPrices_" + index);
-                        document.getElementById('coinPrices').appendChild(coinDiv);
-                    }
+                    // Update the coin prices display
+                    updateCoinPrices();
                 } else {
                     console.error('Error: ' + request.status);
                 }
@@ -53,6 +48,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
             request.send();
         });
+    }
+
+    function updateCoinPrices() {
+        var coinPricesDiv = document.getElementById('coinPrices');
+        if (coinPricesDiv) {
+            // Clear previous coin prices
+            coinPricesDiv.innerHTML = '';
+
+            // Iterate over the symbols and update the coin prices
+            symbols.forEach(function(symbol) {
+                var price = coinPrices[symbol];
+
+                // Create a div element to display the coin price
+                var coinDiv = document.createElement('div');
+                coinDiv.textContent = symbol + ": " + price;
+                coinDiv.classList.add("coinPrice");
+
+                coinPricesDiv.appendChild(coinDiv);
+            });
+        } else {
+            console.error('coinPrices element not found');
+        }
     }
 
     function displayRefreshMessage() {
