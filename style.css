@@ -1,16 +1,12 @@
 body {
-  font-family: Arial, sans-serif;
+    font-family: Arial, sans-serif;
+    padding: 20px;
 }
 
 h1 {
-  text-align: center;
+    text-align: center;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 10px;
+#coinPrices {
+    margin-top: 20px;
 }
