@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
             makeRequest(symbol);
         });
         displayRefreshMessage();
-    }, 10000);
+    }, 3000);
 
     function makeRequest(symbol) {
         // Make a request to the API endpoint
@@ -36,7 +36,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 var coinPricesDiv = document.getElementById('coinPrices');
                 if (coinPricesDiv) {
                     // Clear previous coin prices
-                    coinPricesDiv.innerHTML = '';
+                    while (coinPricesDiv.firstChild) {
+                        coinPricesDiv.removeChild(coinPricesDiv.firstChild);
+                    }
+
                     coinPricesDiv.appendChild(coinDiv);
                 } else {
                     console.error('coinPrices element not found');
