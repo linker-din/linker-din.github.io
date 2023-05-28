@@ -1,61 +1,45 @@
-// API request function
-function fetchTokenPrice(url) {
-    return fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data && data.data && data.data.price) {
-          return data.data.price;
-        } else {
-          throw new Error('Invalid response data');
-        }
-      })
-      .catch(error => {
-        console.log('Error:', error);
-        return 'N/A';
-      });
-  }
-  
-  // Display token price
-  function displayTokenPrice(symbol, price) {
-    const tokenPriceElement = document.getElementById('tokenPrice');
-    const tokenItem = document.createElement('li');
-    tokenItem.textContent = `Symbol: ${symbol} | Price: ${price}`;
-    tokenPriceElement.appendChild(tokenItem);
-  }
-  
-  // Fetch token prices and display them
-  function fetchAndDisplayTokenPrices() {
-    const tokenList = [
-      { symbol: 'LMWR-USDT', url: 'https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=LMWR-USDT' },
-      { symbol: 'KCS-USDT', url: 'https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=KCS-USDT' }
-      // Add more tokens here as needed
-    ];
-  
-    const tokenPriceElement = document.getElementById('tokenPrice');
-    tokenPriceElement.innerHTML = ''; // Clear previous token prices
-  
-    // Fetch and display token prices sequentially
-    function fetchSequentially(index) {
-      if (index >= tokenList.length) {
-        return; // Exit when all tokens have been fetched
-      }
-  
-      const { symbol, url } = tokenList[index];
-      fetchTokenPrice(url)
-        .then(price => {
-          displayTokenPrice(symbol, price);
-          fetchSequentially(index + 1); // Fetch next token
-        });
+document.addEventListener("DOMContentLoaded", function() {
+    // Define the symbols
+    var symbols = ['LMWR-USDT', 'KCS-USDT'];
+
+    // Make requests for each symbol
+    symbols.forEach(function(symbol) {
+        makeRequest(symbol);
+    });
+
+    function makeRequest(symbol) {
+        // Make a request to the API endpoint
+        var request = new XMLHttpRequest();
+        var url = "https://arcane-shelf-63340.herokuapp.com/api/v1/market/orderbook/level1";
+        var params = { "symbol": symbol };
+        var paramString = Object.keys(params).map(function(key) {
+            return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+        }).join("&");
+        
+        request.open('GET', url + "?" + paramString, true);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                // Parse the JSON response
+                var response = JSON.parse(request.responseText);
+                var price = response.price;
+
+                // Create a div element to display the coin price
+                var coinDiv = document.createElement('div');
+                coinDiv.innerHTML = symbol + ": " + price;
+
+                // Append the div to the coinPrices element
+                var coinPricesDiv = document.getElementById('coinPrices');
+                coinPricesDiv.appendChild(coinDiv);
+            } else {
+                console.error('Error: ' + request.status);
+            }
+        };
+
+        request.onerror = function() {
+            console.error('Request failed');
+        };
+
+        request.send();
     }
-  
-    fetchSequentially(0); // Start fetching from the first token
-  }
-  
-  // Fetch and display token prices when the page loads
-  window.addEventListener('load', fetchAndDisplayTokenPrices);
-  
+});
