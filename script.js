@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Define the symbols
     var symbols = ['LMWR-USDT', 'KCS-USDT'];
 
-    // Make requests initially and every 10 seconds
+    // Make requests initially and every 3 seconds
     setInterval(function() {
         symbols.forEach(function(symbol) {
             makeRequest(symbol);
@@ -11,10 +11,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 3000);
 
     function makeRequest(symbol) {
+        // Generate a random number to use as a cache-busting parameter
+        var cacheBuster = Math.random();
+
         // Make a request to the API endpoint
         var request = new XMLHttpRequest();
         var url = "https://arcane-shelf-63340.herokuapp.com/api/v1/market/orderbook/level1";
-        var params = { "symbol": symbol };
+        var params = { "symbol": symbol, "cacheBuster": cacheBuster };
         var paramString = Object.keys(params).map(function(key) {
             return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
         }).join("&");
