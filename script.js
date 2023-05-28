@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Define the symbols
-    var symbols = ['LMWR-USDT', 'KCS-USDT'];
+    var symbols = ['LMWR-USDT', 'KCS-USDT', 'ETH-USDT', 'BTC-USDT'];
 
     // Make requests initially and every 3 seconds
     setInterval(function() {
