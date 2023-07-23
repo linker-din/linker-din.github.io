@@ -14,14 +14,15 @@ p {
   margin: 10px 0;
   font-size: 16px;
   color: #333;
-}
-
-p:nth-child(2n) {
+  padding: 10px;
+  border: 1px solid #ccc;
   background-color: #f9f9f9;
-  padding: 5px;
 }
 
 p:nth-child(2n+1) {
   background-color: #f1f1f1;
-  padding: 5px;
+}
+
+p:nth-child(2n) {
+  background-color: #f9f9f9;
 }
