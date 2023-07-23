@@ -65,7 +65,21 @@ html
     height: 3px
     background: transparent
     box-shadow: $shadows-big
-
+#stars4
+  width: 1px
+  height: 1px
+  background: transparent
+  box-shadow: $shadows-small
+  animation			: animStar 50s linear infinite
+    
+  &:after
+    content: " "
+    position: relative
+    top: 2000px
+    width: 1px
+    height: 1px
+    background: transparent
+    box-shadow: $shadows-small
 #title
   position: absolute
   top: 50%
